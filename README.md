@@ -6,12 +6,12 @@ Curso completo da AlgaWorks, SpringBoot Especialista SprintREST
 23 Módulos, 173 temas. 
 ## Spring e Injeção de Dependências
 - Usando @ConfiguratioN e @Bean para definir beans **[COMPLETO]**
-- Conhecendo os pontos de injeção e a anotação @Autowired
-- Dependência opcional com @Autowired
-- Ambiguidade de beans e injeção de lista de beans
-- Desambiguação de beans com @Primary
-- Desambiguação de beans com @Qualifier
-- Desambiguação de beans com anotação customizada
+- Conhecendo os pontos de injeção e a anotação @Autowired **[COMPLETO]**
+- Dependência opcional com @Autowired **[COMPLETO]**
+- Ambiguidade de beans e injeção de lista de beans **[COMPLETO]**
+- Desambiguação de beans com @Primary **[COMPLETO]**
+- Desambiguação de beans com @Qualifier **[COMPLETO]**
+- Desambiguação de beans com anotação customizada **[COMPLETO]**
 - Mudando o comportamento da aplicação com Spring Profiles
 - Criando métodos de callback do ciclo de vida dos beans
 - Publicando e consumindo eventos customizados
