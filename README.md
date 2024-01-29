@@ -12,15 +12,15 @@ Curso completo da AlgaWorks, SpringBoot Especialista SprintREST
 - Desambiguação de beans com @Primary **[COMPLETO]**
 - Desambiguação de beans com @Qualifier **[COMPLETO]**
 - Desambiguação de beans com anotação customizada **[COMPLETO]**
-- Mudando o comportamento da aplicação com Spring Profiles
-- Criando métodos de callback do ciclo de vida dos beans
-- Publicando e consumindo eventos customizados
-- Configurando projetos Spring Boot com o application.properties
-- Substituindo propriedades via linha de comando e variáveis de ambiente
-- Criando e acessando propriedades customizadas com @Value
-- Acessando propriedades com @ConfigurationProperties
-- Alterando a configuração do projeto dependendo do ambiente (com Spring Profiles)
-- Ativando o Spring Profile por linha de comando e variável de ambiente
+- Mudando o comportamento da aplicação com Spring Profiles **[COMPLETO]**
+- Criando métodos de callback do ciclo de vida dos beans **[COMPLETO]**
+- Publicando e consumindo eventos customizados **[COMPLETO]**
+- Configurando projetos Spring Boot com o application.properties **[COMPLETO]**
+- Substituindo propriedades via linha de comando e variáveis de ambiente **[COMPLETO]**
+- Criando e acessando propriedades customizadas com @Value **[COMPLETO]**
+- Acessando propriedades com @ConfigurationProperties **[COMPLETO]**
+- Alterando a configuração do projeto dependendo do ambiente (com Spring Profiles) **[COMPLETO]**
+- Ativando o Spring Profile por linha de comando e variável de ambiente **[COMPLETO]**
 
 ## Introdução ao JPA Hibernate
 - Instalando o MySQL Server e MySQL Workbench
