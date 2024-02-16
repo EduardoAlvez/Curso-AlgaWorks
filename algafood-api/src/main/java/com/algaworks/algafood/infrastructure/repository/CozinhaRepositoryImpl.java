@@ -15,7 +15,7 @@ public class CozinhaRepositoryImpl implements CozinhaRepository{
 	private EntityManager em;
 
 	@Override
-	public List<Cozinha> listar(){
+	public List<Cozinha> todasCozinhas(){
 //		NÃO FUNCIONOU, AINDA NÃO SEI O PQ!
 //		todo
 		return em.createQuery("from Cozinha",Cozinha.class).getResultList();
@@ -23,23 +23,23 @@ public class CozinhaRepositoryImpl implements CozinhaRepository{
 	
 //	DEVOLVER UMA INSTANCIA DE COZINHA. QUE FOI BUSCADA POR ID COM O .find
 	@Override
-	public Cozinha buscarCozinha(Long id) {
+	public Cozinha porIDCozinha(Long id) {
 		return em.find(Cozinha.class, id);
 	}
 	
 //	SIMULA UMA TRANSAÇÃO
-	@Override
 	@Transactional
-	public Cozinha salvarCozinha(Cozinha cozinha) {
+	@Override
+	public Cozinha adicionarCozinha(Cozinha cozinha) {
 		return em.merge(cozinha);
 	}
 	
-	@Override
 	@Transactional
+	@Override
 	public void remover(Cozinha cozinha) {
 //		E NECESSÁRIO BUSCAR POIS A INSTACIA COZINHA NAO ESTA SENDO GERENCIADA
 //		QUANDO USA O METODO buscar A COZINHA PASSA A SER GERENCIADA E PODE SER REMOVIDA
-		cozinha = buscarCozinha(cozinha.getId());
+		cozinha = porIDCozinha(cozinha.getId());
 		em.remove(cozinha);
 	}
 	
