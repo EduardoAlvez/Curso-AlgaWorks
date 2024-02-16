@@ -22,27 +22,27 @@ Curso completo da AlgaWorks, SpringBoot Especialista SprintREST
 - Alterando a configuração do projeto dependendo do ambiente (com Spring Profiles) **[COMPLETO]**
 - Ativando o Spring Profile por linha de comando e variável de ambiente **[COMPLETO]**
 
-## Introdução ao JPA Hibernate
-- Instalando o MySQL Server e MySQL Workbench
-- O que é JPA e Hibernate?
-- Adicionando JPA e configurando o Data Source
-- Mapeando entidades com JPA
-- Criando as tabelas do banco a partir das entidades
-- Mapeando o id da entidade para autoincremento
-- Importando dados de teste com import.sql
-- Consultando objetos do banco de dados
-- Adicionando um objeto no banco de dados
-- Buscando um objeto pelo id no banco de dados
-- Atualizando um objeto no banco de dados
-- Excluindo um objeto do banco de dados
-- Conhecendo o padrão Aggregate do DDD
-- Conhecendo e implementando o padrão Repository
-- Conhecendo e usando o Lombok
-- Desafio: Lombok e repositório de restaurantes
-- Mapeando relacionamento com @ManyToOne
-- A anotação @JoinColumn
-- Propriedade nullable de @Column e @JoinColumn
-- Desafio: mapeando entidades
+## Introdução ao JPA Hibernate  **[COMPLETO]**
+- Instalando o MySQL Server e MySQL Workbench **[COMPLETO]**
+- O que é JPA e Hibernate? **[COMPLETO]**
+- Adicionando JPA e configurando o Data Source **[COMPLETO]**
+- Mapeando entidades com JPA **[COMPLETO]**
+- Criando as tabelas do banco a partir das entidades **[COMPLETO]**
+- Mapeando o id da entidade para autoincremento **[COMPLETO]**
+- Importando dados de teste com import.sql **[COMPLETO]**
+- Consultando objetos do banco de dados **[COMPLETO]**
+- Adicionando um objeto no banco de dados **[COMPLETO]**
+- Buscando um objeto pelo id no banco de dados **[COMPLETO]**
+- Atualizando um objeto no banco de dados **[COMPLETO]**
+- Excluindo um objeto do banco de dados **[COMPLETO]**
+- Conhecendo o padrão Aggregate do DDD **[COMPLETO]**
+- Conhecendo e implementando o padrão Repository **[COMPLETO]**
+- Conhecendo e usando o Lombok **[COMPLETO]**
+- Desafio: Lombok e repositório de restaurantes **[COMPLETO]**
+- Mapeando relacionamento com @ManyToOne **[COMPLETO]**
+- A anotação @JoinColumn **[COMPLETO]**
+- Propriedade nullable de @Column e @JoinColumn **[COMPLETO]**
+- Desafio: mapeando entidades **[COMPLETO]**
 
 ## REST com Spring
 - O que é REST?
