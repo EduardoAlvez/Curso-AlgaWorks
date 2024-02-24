@@ -5,16 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "cozinhas")
-public class Cozinha {
+public class Permissao {
 
 	@EqualsAndHashCode.Include
 	@Id
@@ -23,5 +20,6 @@ public class Cozinha {
 	
 	@Column(name = "nome", nullable = false)
 	private String nome;
-	
+	@Column(name = "descricao", nullable = false)
+	private String descricao;
 }
