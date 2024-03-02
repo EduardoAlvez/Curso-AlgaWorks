@@ -6,9 +6,9 @@ import com.algaworks.algafood.domain.model.Estado;
 
 public interface EstadoRepository {
 	
-	List<Estado> todosEstados();
+	List<Estado> todos();
 	Estado buscarPorId(Long id);
-	Estado adicionarEstado(Estado estado);
+	Estado salvar(Estado estado);
 	void remover(Estado estado);
 
 }

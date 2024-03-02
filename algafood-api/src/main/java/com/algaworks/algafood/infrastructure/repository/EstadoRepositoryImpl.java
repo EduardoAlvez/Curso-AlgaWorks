@@ -18,7 +18,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	private EntityManager gerente;
 	
 	@Override
-	public List<Estado> todosEstados() {
+	public List<Estado> todos() {
 		return gerente.createQuery("from Estado",Estado.class).getResultList();
 	}
 
@@ -29,7 +29,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@Transactional
 	@Override
-	public Estado adicionarEstado(Estado estado) {
+	public Estado salvar(Estado estado) {
 		return gerente.merge(estado);
 	}
 

@@ -22,7 +22,7 @@ public class BuscaCozinhaMain {
 		CozinhaRepository cadastroCozinha = app.getBean(CozinhaRepository.class);
 		
 		
-		Cozinha cozinha = cadastroCozinha.porIDCozinha(1L);
+		Cozinha cozinha = cadastroCozinha.buscarPorId(1L);
 		System.out.println(cozinha.getNome());
 		
 	}

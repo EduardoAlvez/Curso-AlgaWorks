@@ -19,6 +19,6 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> listar(){
-		return estadoRepository.todosEstados();
+		return estadoRepository.todos();
 	}
 }
