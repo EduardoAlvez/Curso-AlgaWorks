@@ -11,10 +11,10 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 
 @Service
-public class cadastrarRestauranteService {
+public class CozinhaService {
 
 	@Autowired
-	CozinhaRepository cozinhaRepository;
+	private CozinhaRepository cozinhaRepository;
 	
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.salvar(cozinha);

@@ -22,7 +22,7 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
-import com.algaworks.algafood.domain.service.cadastrarCozinhaService;
+import com.algaworks.algafood.domain.service.CozinhaService;
 
 //@Controller
 //@ResponseBody
@@ -35,7 +35,7 @@ public class CozinhaController {
 	private CozinhaRepository cozinhaRepository;
 
 	@Autowired
-	private cadastrarCozinhaService cadastrarCozinhaService;
+	private CozinhaService cadastrarCozinhaService;
 
 //	METODO QUE VAI SER CHAMADO NO GET.
 	@GetMapping

@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded =  true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Restaurante {
 	
@@ -29,7 +29,7 @@ public class Restaurante {
 	private BigDecimal taxafrete;
 	
 	@ManyToOne
-//	@JoinColumn(name = "cozinha_codigo") PARA MODEIFICA UMA KEY DEVEMDO APLICAR O JOIN
+//	@JoinColumn(name = "cozinha_codigo") PARA MODEIFICA UMA KEY DEVE APLICAR O JOIN
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 

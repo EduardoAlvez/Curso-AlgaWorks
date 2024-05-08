@@ -2,6 +2,7 @@ package com.algaworks.algafood.infrastructure.repository;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -15,38 +16,38 @@ import jakarta.transaction.Transactional;
 public class RestauranteRepositoryImpl implements RestauranteRepository{
 
 	@PersistenceContext
-	private EntityManager em;
+	private EntityManager gerente;
 
 	
 //	MÉTODOS
 	@Override
 	public List<Restaurante> todasRestaurantes(){				 
-		return em.createQuery("from Restaurante",Restaurante.class).getResultList();
+		return gerente.createQuery("from Restaurante",Restaurante.class).getResultList();
 	}
 	
 //	DEVOLVER UMA INSTANCIA DE COZINHA. QUE FOI BUSCADA POR ID COM O .find
 	@Override
-	public Restaurante porIDRestaurante(Long id) {
-		return em.find(Restaurante.class, id);
-	}
-	
-//	SIMULA UMA TRANSAÇÃO
-	@Transactional
-	@Override
-	public Restaurante adicionarRestaurante(Restaurante restaurante) {
-		return em.merge(restaurante);
+	public Restaurante buscarPorID(Long id) {
+		return gerente.find(Restaurante.class, id);
 	}
 	
 	@Transactional
 	@Override
-	public void remover(Restaurante restaurante) {
+	public void remover(Long id) {
 //		E NECESSÁRIO BUSCAR POIS A INSTACIA COZINHA NAO ESTA SENDO GERENCIADA
 //		QUANDO USA O METODO buscar A COZINHA PASSA A SER GERENCIADA E PODE SER REMOVIDA
-		restaurante = porIDRestaurante(restaurante.getId());
-		em.remove(restaurante);
+		Restaurante restaurante = buscarPorID(id);
+		if(restaurante == null)
+			throw new EmptyResultDataAccessException(1);
+		
+		gerente.remove(restaurante);
 	}
-	
 
-	
+	@Transactional
+	@Override
+	public Restaurante salvar(Restaurante restaurante) {
+		return gerente.merge(restaurante);
+	}
+
 	
 }
