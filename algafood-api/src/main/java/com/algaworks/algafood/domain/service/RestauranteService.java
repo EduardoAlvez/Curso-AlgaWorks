@@ -1,7 +1,9 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -18,27 +20,47 @@ public class RestauranteService {
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
+	public List<Restaurante> buscarTodos() {
+		return restauranteRepository.findAll();
+	}
+	
 	public Restaurante salvar(Restaurante restaurante) {
-		Cozinha cozinha = cozinhaRepository.buscarPorId(restaurante.getCozinha().getId());
 		
-		if(cozinha == null)
-			throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de cozinha com código %d", restaurante.getCozinha().getId()));
+		Long idCozinha = restaurante.getCozinha().getId();
+		Cozinha cozinha = cozinhaRepository.findById(idCozinha)
+				.orElseThrow(()-> new EntidadeNaoEncontradaException(
+						String.format("Não existe cadastro de cozinha com código %d", restaurante.getCozinha().getId())));
 		
 		restaurante.setCozinha(cozinha);
-		
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
+//		if(cozinha == null)
+//			throw new EntidadeNaoEncontradaException(
+//					String.format("Não existe cadastro de cozinha com código %d", restaurante.getCozinha().getId()));		
 	}
 	
 	public void remover(Long id) {
-		try {
-			restauranteRepository.remover(id);
-		}catch (EmptyResultDataAccessException e) {
+		if(!restauranteRepository.existsById(id)) 
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe uma Restaurante com o ID: %d", id));
+					"Não existe uma Restaurante com o ID: %d".formatted(id));			
+			
+		try {
+			restauranteRepository.deleteById(id);
+			
+		}catch (IllegalArgumentException e) {
+			throw new EntidadeNaoEncontradaException(
+                    "Não existe uma cozinha com o ID: %d.".formatted(id));
 		}
 	}
 	
-	public Restaurante buscar(Long id) {
-		return restauranteRepository.buscarPorID(id);
+	public Optional<Restaurante> buscarPorID(Long id) {
+		return restauranteRepository.findById(id);
 	}
+	
+	
+	/*
+	 * NAO SE USA MAIS.
+	 * catch (EmptyResultDataAccessException e) { throw new
+	 * EntidadeNaoEncontradaException(
+	 * "Não existe uma Restaurante com o ID: %d".formatted(id)); }
+	 */
 }

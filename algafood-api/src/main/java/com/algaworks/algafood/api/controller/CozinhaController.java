@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,12 @@ public class CozinhaController {
 //	METODO QUE VAI SER CHAMADO NO GET.
 	@GetMapping
 	public List<Cozinha> listar() {
-		return cozinhaRepository.todas();
+		return cadastrarCozinhaService.todas();
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
 	public CozinhasXmlWrapper listarXml() {
-		return new CozinhasXmlWrapper(cozinhaRepository.todas());
+		return new CozinhasXmlWrapper(cadastrarCozinhaService.todas());
 	}
 
 //	PODE SER USADO PRA IGNORAR OS DADOS QUE SERÁ EXIBIDO
@@ -59,11 +60,11 @@ public class CozinhaController {
 
 	@GetMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) {// @PathVariable DIZ ONDE ASSOCIAR O ID
-		Cozinha cozinha = cozinhaRepository.buscarPorId(id);
+		Optional<Cozinha> cozinha = cozinhaRepository.findById(id); // ADAPTANDO TUDO PARA USO DE OPTIONAL!!
 
-		if (cozinha != null)
-			return ResponseEntity.status(HttpStatus.OK).body(cozinha); // DUAS FORMA SIMPLES DE MODIFCAR O STATUS HTTP
-																		// PRIMEIRA FORMA
+		if (cozinha.isPresent())
+			return ResponseEntity.status(HttpStatus.OK).body(cozinha.get()); // DUAS FORMA SIMPLES DE MODIFCAR O STATUS HTTP. PRIMEIRA FORMA
+																		
 //		return ResponseEntity.ok(cozinha); SEGUNDA FORMA. LOGO CONHECEMOS TRES FORMAS DIFERENTE DE MODIFICA O STATUS HTTP
 
 		return ResponseEntity.notFound().build();
@@ -83,29 +84,32 @@ public class CozinhaController {
 
 	@PutMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable("cozinhaId") Long id, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhaAtual = cozinhaRepository.buscarPorId(id);
+		Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(id);
 
-		if (cozinhaAtual != null) {
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cozinhaAtual = cadastrarCozinhaService.salvar(cozinhaAtual);
-
-			return ResponseEntity.ok(cozinhaAtual);
+		if (cozinhaAtual.isPresent()) {
+			BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+//			cozinhaAtual = cadastrarCozinhaService.salvar(cozinhaAtual);
+			
+			return ResponseEntity.ok(cadastrarCozinhaService.salvar(cozinhaAtual.get()));
 		}
 		return ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> remover(@PathVariable("cozinhaId") Long id) {
+	public ResponseEntity<?> remover(@PathVariable("cozinhaId") Long id) {
+		
 		try {
 			cadastrarCozinhaService.remover(id);
+
 			return ResponseEntity.noContent().build();
 			
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 			
 		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
+		
 	}
 
 }

@@ -38,4 +38,5 @@ public class Restaurante {
 	public void setTaxafrete(BigDecimal taxafrete) {
 		this.taxafrete = taxafrete;
 	}
+
 }
