@@ -15,8 +15,8 @@ public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 	// O NOME DO MÉTODO VIRA UMA EXPRESSAO.
 	// JPA POSSUI KEY WORDS, TODAS ESTAO NA DOCUMENTAÇÃO DO JPA
 	
-	@Query("from Cozinha where nome like %:nome%")
-	List<Cozinha> consultaPorNome(String nome);
+	@Query("from Cozinha where nome like %:nome%") // DESSA FORMA PODEMOS FAZER CONSULTAR POR JPQL, PODE VIRAR UM PROBLEMA A MEDIDA QUE VAI CRESCENDO
+	List<Cozinha> consultaPorNome(String nome); // AINDA TEREMOS UM NOME DE METODO EXPLICATIVO E SIMPLES
 	
 	List<Cozinha> findTodasByNomeContaining(String nome); // Containing = like %:nome%
 	List<Cozinha> findTodasByNome(String nome); // JPA CONSEGUE CRIAR METODOS USANDO OS PARAMENTROS IDENTICOS AO MODELO.
