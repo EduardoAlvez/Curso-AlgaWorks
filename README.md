@@ -44,48 +44,49 @@ Curso completo da AlgaWorks, SpringBoot Especialista SprintREST
 - Propriedade nullable de @Column e @JoinColumn **[COMPLETO]**
 - Desafio: mapeando entidades **[COMPLETO]**
 
-## REST com Spring
-- O que é REST?
-- Conhecendo as constraints do REST
-- Diferença entre REST e RESTful
-- Desenvolvedores de REST APIs puristas e pragmáticos
-- Conhecendo o protocolo HTTP
-- Usando o protocolo HTTP
-- Instalando e testando o Postman
-- Entendendo o que são Recursos REST
-- Identificando recursos REST
-- Modelando e requisitando um Collection Resource com GET
-- Desafio: collection resource de estados
-- Representações de recursos e content negotiation
-- Implementando content negotiation para retornar JSON ou XML
-- Consultando Singleton Resource com GET e @PathVariable
-- Customizando as representações XML e JSON com @JsonIgnore, @JsonProperty e @JsonRootName
-- Customizando a representação em XML com Wrapper e anotações do Jackson
-- Conhecendo os métodos HTTP
-- Conhecendo os códigos de status HTTP
-- Definindo o status da resposta HTTP com @ResponseStatus
-- Manipulando a resposta HTTP com ResponseEntity
-- Corrigindo o Status HTTP para resource inexistente
-- Status HTTP para collection resource vazia: qual usar?
-- Modelando e implementando a inclusão de recursos com POST
-- Negociando o media type do payload do POST com Content-Type
-- Modelando e implementando a atualização de recursos com PUT
-- Modelando e implementando a exclusão de recursos com DELETE
-- Implementando a camada de domain services (e a importância da linguagem ubíqua)
-- Refatorando a exclusão de cozinhas para usar domain services
-- Desafio: modelando e implementando a consulta de recursos de restaurantes
-- Modelando e implementando a inclusão de recursos de restaurantes
-- Desafio: Modelando e implementando a atualização de recursos de restaurantes
-- Desafio: implementando serviços REST de cidades e estados
-- Analisando solução para atualização parcial de recursos com PATCH
-- Finalizando a atualização parcial com a API de Reflections do Spring
-- Introdução ao Modelo de Maturidade de Richardson (RMM)
-- Conhecendo o nível 0 do RMM
-- Conhecendo o nível 1 do RMM
-- Conhecendo o nível 2 do RMM
-- Conhecendo o nível 3 do RMM
+## REST com Spring **[COMPLETO]**
+- O que é REST? **[COMPLETO]**
+- Conhecendo as constraints do REST **[COMPLETO]**
+- Diferença entre REST e RESTful **[COMPLETO]**
+- Desenvolvedores de REST APIs puristas e pragmáticos **[COMPLETO]**
+- Conhecendo o protocolo HTTP **[COMPLETO]**
+- Usando o protocolo HTTP **[COMPLETO]**
+- Instalando e testando o Postman **[COMPLETO]**
+- Entendendo o que são Recursos REST **[COMPLETO]**
+- Identificando recursos REST **[COMPLETO]**
+- Modelando e requisitando um Collection Resource com GET **[COMPLETO]**
+- Desafio: collection resource de estados **[COMPLETO]**
+- Representações de recursos e content negotiation **[COMPLETO]**
+- Implementando content negotiation para retornar JSON ou XML **[COMPLETO]**
+- Consultando Singleton Resource com GET e @PathVariable **[COMPLETO]**
+- Customizando as representações XML e JSON com @JsonIgnore, @JsonProperty e @JsonRootName **[COMPLETO]**
+- Customizando a representação em XML com Wrapper e anotações do Jackson **[COMPLETO]**
+- Conhecendo os métodos HTTP **[COMPLETO]**
+- Conhecendo os códigos de status HTTP **[COMPLETO]**
+- Definindo o status da resposta HTTP com @ResponseStatus **[COMPLETO]**
+- Manipulando a resposta HTTP com ResponseEntity **[COMPLETO]**
+- Corrigindo o Status HTTP para resource inexistente **[COMPLETO]**
+- Status HTTP para collection resource vazia: qual usar? **[COMPLETO]**
+- Modelando e implementando a inclusão de recursos com POST **[COMPLETO]**
+- Negociando o media type do payload do POST com Content-Type **[COMPLETO]**
+- Modelando e implementando a atualização de recursos com PUT **[COMPLETO]**
+- Modelando e implementando a exclusão de recursos com DELETE **[COMPLETO]**
+- Implementando a camada de domain services (e a importância da linguagem ubíqua) **[COMPLETO]**
+- Refatorando a exclusão de cozinhas para usar domain services **[COMPLETO]**
+- Desafio: modelando e implementando a consulta de recursos de restaurantes **[COMPLETO]**
+- Modelando e implementando a inclusão de recursos de restaurantes **[COMPLETO]**
+- Desafio: Modelando e implementando a atualização de recursos de restaurantes **[COMPLETO]**
+- Desafio: implementando serviços REST de cidades e estados **[COMPLETO]**
+- Analisando solução para atualização parcial de recursos com PATCH **[COMPLETO]**
+- Finalizando a atualização parcial com a API de Reflections do Spring **[COMPLETO]**
+- Introdução ao Modelo de Maturidade de Richardson (RMM) **[COMPLETO]**
+- Conhecendo o nível 0 do RMM **[COMPLETO]**
+- Conhecendo o nível 1 do RMM **[COMPLETO]**
+- Conhecendo o nível 2 do RMM **[COMPLETO]**
+- Conhecendo o nível 3 do RMM **[COMPLETO]**
 
-## Super poderes do Spring Data JPA
+## Super poderes do Spring Data JPA **[INICIANDO]**
+
 ## Explorando mais do JPA e Hibernate
 ## Pool de conexões e Flyway
 ## Tratamento e modelagem de erros da API
