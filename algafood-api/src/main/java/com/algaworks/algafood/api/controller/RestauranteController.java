@@ -88,7 +88,8 @@ public class RestauranteController {
 		//BUSCA O RESTAURANTE ORIGIAL
 		Optional<Restaurante> restauranteDestino = restauranteService.buscarPorID(id);
 		
-		if (restauranteDestino.isPresent()) 
+		// Verifica se tem algum objeto, caso nao joga uma msg de erro
+		if (!restauranteDestino.isPresent()) 
 			return ResponseEntity.notFound().build();
 		
 		mesclar(dados, restauranteDestino.get());

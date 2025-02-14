@@ -13,16 +13,41 @@ import com.algaworks.algafood.domain.repository.RestauranteRepositoryQueries;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 @Component
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
 	@PersistenceContext
-	private EntityManager gerente;
+	private EntityManager manager;
 
 	@Override
 	public List<Restaurante> find(String nome, BigDecimal valorInicial, BigDecimal valorFinal) {
 		
+		// PARA CONSULTAS MUITO SIMPLES EVITAR USAR, JPQL E MAIS FÁCIL
+		// VAMOS APRENDER A USAR O "CRITERIAQUERY"
+		
+		// Cria instancia da "Criteriaquery"
+		CriteriaBuilder builder = manager.getCriteriaBuilder(); 
+		
+		// Tem varios métodos como "select"...
+		CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
+		
+		// Usando os métodos
+		criteria.from(Restaurante.class); // equivale no Jpql, "from Restaurante";
+		
+		
+		
+		
+		TypedQuery<Restaurante> query = manager.createQuery(criteria);
+		
+		return query.getResultList();
+				
+	}
+
+//		ESSA FORAM DUAS FORMA DE USAR O "JPQL" PARA CONSULTAS
 //		FORMA MANUAL
 //		var jpql = "from Restaurante"
 //				+ "where like :nome"
@@ -33,34 +58,31 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 //				.setParameter("valorInicial", valorInicial)
 //				.setParameter("calorFinal", valorFinal)
 //				.getResultList();
-		
+	
 //		FORMA DINAMICA
-		var paramentros = new HashMap<String,Object>();
-		
-		var jpql = new StringBuilder();
-		jpql.append("from Restaurante where 0 = 0 ");
-		
-		if(StringUtils.hasLength(nome)) {
-			jpql.append("and nome like :nome ");
-			paramentros.put("nome", "%"+nome+"%");
-		}
-		
-		if(valorInicial != null) {
-			jpql.append("and taxafrete >= :valorInicial");
-			paramentros.put("valorInicial", valorInicial);
-			
-		}
-		
-		if (valorFinal != null) {
-			jpql.append("and taxafrete <= :valorFinal");
-			paramentros.put("valorFinal", valorFinal);
-		}
-		
-		
-		return gerente.createQuery(jpql.toString(), Restaurante.class).getResultList();
-		
-		
-	}
+//		var paramentros = new HashMap<String,Object>();
+//		
+//		var jpql = new StringBuilder();
+//		jpql.append("from Restaurante where 0 = 0 ");
+//		
+//		if(StringUtils.hasLength(nome)) {
+//			jpql.append("and nome like :nome ");
+//			paramentros.put("nome", "%"+nome+"%");
+//		}
+//		
+//		if(valorInicial != null) {
+//			jpql.append("and taxafrete >= :valorInicial");
+//			paramentros.put("valorInicial", valorInicial);
+//			
+//		}
+//		
+//		if (valorFinal != null) {
+//			jpql.append("and taxafrete <= :valorFinal");
+//			paramentros.put("valorFinal", valorFinal);
+//		}
+//		
+//		
+//		return gerente.createQuery(jpql.toString(), Restaurante.class).getResultList();
 
 	/*
 	 * // MÉTODOS
@@ -88,5 +110,4 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 	 * @Override public Restaurante salvar(Restaurante restaurante) { return
 	 * gerente.merge(restaurante); }
 	 */
-
 }

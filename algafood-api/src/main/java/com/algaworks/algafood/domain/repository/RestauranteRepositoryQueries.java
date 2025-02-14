@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.algaworks.algafood.domain.model.Restaurante;
 
+// INTERFACE DE LIGAÇÃO
 public interface RestauranteRepositoryQueries {
 
 	public List<Restaurante> find(String nome , BigDecimal valorInicial, BigDecimal valorFinal);
