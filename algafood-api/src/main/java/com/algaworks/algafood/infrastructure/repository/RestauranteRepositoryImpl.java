@@ -2,7 +2,7 @@
 package com.algaworks.algafood.infrastructure.repository;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -16,6 +16,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 @Component
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
@@ -24,21 +26,43 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 	private EntityManager manager;
 
 	@Override
-	public List<Restaurante> find(String nome, BigDecimal valorInicial, BigDecimal valorFinal) {
+	public List<Restaurante> find(String nome, 
+			BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
+
+//		System.out.println("Taxa Frete Final recebida: " + taxaFreteFinal);
 		
 		// PARA CONSULTAS MUITO SIMPLES EVITAR USAR, JPQL E MAIS FÁCIL
 		// VAMOS APRENDER A USAR O "CRITERIAQUERY"
 		
-		// Cria instancia da "Criteriaquery"
+		// Cria instancia da "Criteriaquery", e metodos do jpql
 		CriteriaBuilder builder = manager.getCriteriaBuilder(); 
 		
 		// Tem varios métodos como "select"...
 		CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
 		
 		// Usando os métodos
-		criteria.from(Restaurante.class); // equivale no Jpql, "from Restaurante";
+		Root<Restaurante> root = criteria.from(Restaurante.class); // equivale no Jpql, "from Restaurante";
 		
 		
+		// Aula 29
+		
+		var predicates = new ArrayList<>();
+		
+		if (StringUtils.hasText(nome)) {
+			predicates.add(builder
+					.like(root.get("nome"), "%"+ nome + "%")); 			
+		}
+		
+		if(taxaFreteInicial != null) {
+			predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));			
+		}
+		
+		if(taxaFreteFinal != null) {
+			predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));			
+		}
+		
+		
+		criteria.where(predicates.toArray(new Predicate[0]));
 		
 		
 		TypedQuery<Restaurante> query = manager.createQuery(criteria);

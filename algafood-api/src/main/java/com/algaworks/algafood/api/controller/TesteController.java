@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -21,9 +22,9 @@ public class TesteController {
 	
 	@GetMapping("/restaurante/por-nome-e-frete")
 	public List<Restaurante> restaurantesPorNome(String nome, 
-			BigDecimal taxaFreteInicial, BigDecimal taxaFretefinal) {
+			BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
 		
-		return restauranteRepository.find(nome, taxaFreteInicial, taxaFretefinal);
+		return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
 	}
 	
 }

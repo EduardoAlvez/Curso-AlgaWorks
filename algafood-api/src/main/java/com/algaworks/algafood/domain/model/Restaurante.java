@@ -26,7 +26,7 @@ public class Restaurante {
 	private String nome;
 	
 	@Column(name = "taxa_frete", nullable = false)
-	private BigDecimal taxafrete;
+	private BigDecimal taxaFrete;
 	
 	@ManyToOne
 //	@JoinColumn(name = "cozinha_codigo") PARA MODEIFICA UMA KEY DEVE APLICAR O JOIN
@@ -35,8 +35,8 @@ public class Restaurante {
 
 	
 //	METODOS
-	public void setTaxafrete(BigDecimal taxafrete) {
-		this.taxafrete = taxafrete;
+	public void setTaxafrete(BigDecimal taxaFrete) {
+		this.taxaFrete = taxaFrete;
 	}
 
 }
