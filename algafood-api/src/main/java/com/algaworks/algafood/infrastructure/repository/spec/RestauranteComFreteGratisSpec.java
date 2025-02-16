@@ -21,3 +21,4 @@ public class RestauranteComFreteGratisSpec implements Specification<Restaurante>
 		return Builder.equal(root.get("taxaFrete"), BigDecimal.ZERO);
 	}
 }
+// Essas classe como possui somente uma metodo pode se simplificada usando lambda

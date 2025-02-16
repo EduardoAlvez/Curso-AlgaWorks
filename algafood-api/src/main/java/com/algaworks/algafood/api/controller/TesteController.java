@@ -1,5 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
+import static com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs.ComFreteGratis;
+import static com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
-import com.algaworks.algafood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
-import com.algaworks.algafood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 
 @RestController
@@ -32,10 +33,12 @@ public class TesteController {
 	// Padrão de projeto "especification"
 	@GetMapping("/restaurante/por-nome-e-frete-gratis")
 	public List<Restaurante> restaurantesPorNome(String nome) {
-		var comFreteGratis = new RestauranteComFreteGratisSpec();
-		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+//		var comFreteGratis = new RestauranteComFreteGratisSpec();
+//		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+//		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
 		
-		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+//		Usando chamada staticas com o padrão Factory
+		return restauranteRepository.findAll(ComFreteGratis().and(comNomeSemelhante(nome)));
 	}
 	
 }
