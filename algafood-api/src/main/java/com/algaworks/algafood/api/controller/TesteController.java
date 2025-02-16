@@ -33,12 +33,16 @@ public class TesteController {
 	// Padrão de projeto "especification"
 	@GetMapping("/restaurante/por-nome-e-frete-gratis")
 	public List<Restaurante> restaurantesPorNome(String nome) {
+//		AULA 29
 //		var comFreteGratis = new RestauranteComFreteGratisSpec();
 //		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
 //		return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
 		
 //		Usando chamada staticas com o padrão Factory
-		return restauranteRepository.findAll(ComFreteGratis().and(comNomeSemelhante(nome)));
+//		return restauranteRepository.findAll(ComFreteGratis().and(comNomeSemelhante(nome)));
+		
+//		Usando a nossa interface, deixando assim tudo padronizado e sem excessos
+		return restauranteRepository.findComFreteGratis(nome);
 	}
 	
 }

@@ -9,4 +9,6 @@ import com.algaworks.algafood.domain.model.Restaurante;
 public interface RestauranteRepositoryQueries {
 
 	public List<Restaurante> find(String nome , BigDecimal valorInicial, BigDecimal valorFinal);
+	
+	public List<Restaurante> findComFreteGratis(String nome);
 }
