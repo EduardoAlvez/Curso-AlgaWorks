@@ -1,18 +1,19 @@
 package com.algaworks.algafood.api.controller;
 
-import static com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs.ComFreteGratis;
-import static com.algaworks.algafood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
-
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+
 
 
 @RestController
@@ -22,7 +23,10 @@ public class TesteController {
 	@Autowired
 	private RestauranteRepository restauranteRepository;
 	
-	@GetMapping("/restaurante/por-nome-e-frete")
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
+	
+	@GetMapping("/restaurantes/por-nome-e-frete")
 	public List<Restaurante> restaurantesPorNome(String nome, 
 			BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
 		
@@ -31,7 +35,7 @@ public class TesteController {
 	
 	
 	// Padrão de projeto "especification"
-	@GetMapping("/restaurante/por-nome-e-frete-gratis")
+	@GetMapping("/restaurantes/por-nome-e-frete-gratis")
 	public List<Restaurante> restaurantesPorNome(String nome) {
 //		AULA 29
 //		var comFreteGratis = new RestauranteComFreteGratisSpec();
@@ -44,5 +48,16 @@ public class TesteController {
 //		Usando a nossa interface, deixando assim tudo padronizado e sem excessos
 		return restauranteRepository.findComFreteGratis(nome);
 	}
+	
+	@GetMapping("/restaurantes/primeiro")
+	public Optional<Restaurante> restaurantePrimeiro() {
+		return restauranteRepository.buscarPrimeiro();
+	}
+	
+	@GetMapping("/cozinhas/primeiro")
+	public Optional<Cozinha> cozinhaPrimeiro() {
+		return cozinhaRepository.buscarPrimeiro();
+	}
+	
 	
 }
