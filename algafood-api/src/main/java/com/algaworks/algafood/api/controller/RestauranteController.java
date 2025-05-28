@@ -69,7 +69,7 @@ public class RestauranteController {
 		Optional<Restaurante> restauranteAtual = restauranteService.buscarPorID(id);
 		
 		if(restauranteAtual.isPresent()) {
-			BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id");
+			BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id,", "produtos");
 			
 			try {
 //				restauranteAtual = restauranteService.salvar(restauranteAtual);

@@ -11,7 +11,7 @@ public class Main {
 		Cliente c1 = new Cliente("João", "Joao@email.com","8199944-3233");
 		Cliente c2 = new Cliente("Maria", "Maria@email.com","8199943-2322");
 		
-		//	FACILITA TESTE UNITARIOS, CRAINDO MOCK?
+		//	FACILITA TESTE UNITARIOS, CRIANDO MOCK?
 		Notificador notificador = new NotificadorSMS();
 //		Notificador notificador = new NotificadorSMS();
 		

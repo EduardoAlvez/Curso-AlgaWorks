@@ -24,7 +24,7 @@ public class MeuPrimeiroController {
 	@ResponseBody
 	public String DonaNandinhaV2() {
 
-		Cliente eduardo = new Cliente("Eduardo", "dudu.200910@hotmail.com", "8199956-4050");
+		Cliente eduardo = new Cliente("Eduardo", "dudu@hotmail.com", "8198999-4999");
 		ativacaoClienteService.Ativar(eduardo);
 
 		return "Fernadinha Beira mar";
