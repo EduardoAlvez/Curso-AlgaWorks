@@ -1,10 +1,15 @@
 package com.algaworks.algafood.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,22 +43,33 @@ public class Restaurante {
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 
+	@Embedded
+	private Endereco endereco;
+
+	@CreationTimestamp
+	@Column(nullable = false)
+	private LocalDateTime dataCadastro;
+
+	@UpdateTimestamp
+	@Column(nullable = false)
+	private LocalDateTime dataAtualizacao;
+
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
 	
 
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento", 
-		joinColumns = @JoinColumn(referencedColumnName = "restaurante_id"), 
-		inverseJoinColumns = @JoinColumn(referencedColumnName = "forma_pagamento_id"))
-	private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+		joinColumns = @JoinColumn(name = "restaurante_id"), 
+		inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
 
 
 
 
 //	METODOS
-	public void setTaxafrete(BigDecimal taxaFrete) {
+	public void setTaxaFrete(BigDecimal taxaFrete) {
 		this.taxaFrete = taxaFrete;
 	}
 

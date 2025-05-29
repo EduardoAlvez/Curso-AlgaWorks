@@ -1,6 +1,9 @@
 package com.algaworks.algafood;
 
-//@Configuration
+import org.springframework.context.annotation.Configuration;
+
+
+// @Configuration
 public class AlgaConfig {	//CLASSE DE CONFIGURACAO
 	//AULA 06 @CONFIGURACAO
 //    @Bean

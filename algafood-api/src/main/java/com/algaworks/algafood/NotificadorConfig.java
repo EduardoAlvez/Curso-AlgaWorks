@@ -2,7 +2,7 @@ package com.algaworks.algafood;
 
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+// @Configuration
 public class NotificadorConfig {
 	//AULA 06 CONFIGURACAO
 //    @Bean
