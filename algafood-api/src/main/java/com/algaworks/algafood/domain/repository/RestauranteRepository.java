@@ -11,7 +11,7 @@ import com.algaworks.algafood.domain.model.Restaurante;
 @Repository
 public interface RestauranteRepository extends CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> { // RestauranteRepositoryQueries tem metodos personalizados
 	
-	@Query("from restaurante r join fetch r.cozinha left join fetch r.formasPagamento")
+	@Query("from Restaurante r join fetch r.cozinha left join fetch r.formasPagamento")
 	List<Restaurante> findAll();
 
 
