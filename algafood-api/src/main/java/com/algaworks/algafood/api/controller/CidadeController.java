@@ -35,7 +35,7 @@ public class CidadeController {
 	@GetMapping("/{cidadeId}")
 	public ResponseEntity<?> buscar(@PathVariable("cidadeId") Long id) {
 		
-		Optional<Cidade> cidadeAtual = cidadeService.buscarPorId(id);
+		Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
 		
 		if(cidadeAtual.isPresent()) {
 			return ResponseEntity.status(HttpStatus.OK).body(cidadeAtual);
@@ -55,7 +55,7 @@ public class CidadeController {
 	@PutMapping("/{cidadeId}")
 	public ResponseEntity<?> atualizar(@PathVariable("cidadeId") Long id, @RequestBody Cidade cidade) {
 		
-		Optional<Cidade> cidadeAtual = cidadeService.buscarPorId(id);
+		Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
 		
 		if (cidadeAtual.isPresent()) {
 			BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");

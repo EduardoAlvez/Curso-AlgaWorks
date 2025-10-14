@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +46,7 @@ public class RestauranteController {
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<?> buscar(@PathVariable("restauranteId") Long id){
-		Optional<Restaurante> restaurante = restauranteService.buscarPorID(id);
-		
-		if(restaurante.isPresent())
-			return ResponseEntity.status(HttpStatus.OK).body(restaurante.get());
+		Restaurante restaurante = restauranteService.buscarOuFalhar(id);
 		
 		return ResponseEntity.notFound().build();
 	}
@@ -57,43 +57,33 @@ public class RestauranteController {
 			restaurante = restauranteService.salvar(restaurante);
 			
 			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-		} catch (EntidadeNaoEncontradaException e) {
-			
-			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
 		}
 	}
 	
 	@PutMapping("/{restauranteId}")
 	public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
-		
-		Optional<Restaurante> restauranteAtual = restauranteService.buscarPorID(id);
-		
-		if(restauranteAtual.isPresent()) {
-			BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id,", "produtos", "dataCadastro");
-			
-			try {
-//				restauranteAtual = restauranteService.salvar(restauranteAtual);
-				return ResponseEntity.ok(restauranteService.salvar(restauranteAtual.get()));
-				
-			} catch (EntidadeNaoEncontradaException e) {
-				
-				return ResponseEntity.badRequest().body(e.getMessage());
-			}
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Restaurante restauranteAtual = null;
+        try {
+            restauranteAtual = restauranteService.buscarOuFalhar(id);
+            BeanUtils.copyProperties(restaurante, restauranteAtual,
+					"id", "produtos", "dataCadastro","formasPagamento", "dataCadastro", "endereco");
+        } catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+
+        return ResponseEntity.ok(restauranteService.salvar(restauranteAtual));
 	}
 	
 	@PatchMapping("/{restauranteId}")
 	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> dados){
 		//BUSCA O RESTAURANTE ORIGIAL
-		Optional<Restaurante> restauranteDestino = restauranteService.buscarPorID(id);
+		Restaurante restauranteDestino = restauranteService.buscarOuFalhar(id);
 		
-		// Verifica se tem algum objeto, caso nao joga uma msg de erro
-		if (!restauranteDestino.isPresent()) 
-			return ResponseEntity.notFound().build();
-		
-		mesclar(dados, restauranteDestino.get());
-		return atualizar(id, restauranteDestino.get());
+		mesclar(dados, restauranteDestino);
+		return atualizar(id, restauranteDestino);
 	}
 
 	private void mesclar(Map<String, Object> dados, Restaurante restauranteDestino) {

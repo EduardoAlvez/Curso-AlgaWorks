@@ -3,7 +3,10 @@ package com.algaworks.algafood.domain.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -16,49 +19,41 @@ import com.algaworks.algafood.domain.repository.EstadoRepository;
 @Service
 public class CidadeService {
 
+	private static final String MSG_CIDADE_EM_USO = "Cidade de codigo %d nao pode ser removido, pois está em uso.";
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	@Autowired
 	private EstadoRepository estadoRepository;
+	@Autowired
+	private EstadoService estadoService;
 	
 	public List<Cidade> todos() {
 		return cidadeRepository.findAll();
 	}
 	
-	public Optional<Cidade> buscarPorId(Long id) {
-//		Optional<Cidade> cidade = cidadeRepository.findById(id);
-		return cidadeRepository.findById(id);
-		
-//		if(cidade != null)
-//			return cidade;
-//		
-//		throw new EntidadeNaoEncontradaException("Cidade de id %d não encontrado.".formatted(id));
+	public Optional<Cidade> buscarOuFalhar(Long id) {
+		return Optional.ofNullable(cidadeRepository.findById(id).orElseThrow(() -> new CidadeNaoEncontradaException(id)));
 	}
 	
 	// SALVAR E ATUALIZAR
 	public Cidade salvar(Cidade cidade) {
 		// USADO PRA ADICIONAR E PARA ATUALIZAR, POIS USA O MERGE.
-		Estado estado = estadoRepository.findById(cidade.getEstado().getId())
-				.orElseThrow(()-> new EntidadeNaoEncontradaException(String.format("Não existe cadastro de estado com código %d", cidade.getEstado().getId())));
-		
+		Long estadoId = cidade.getEstado().getId();
+
+		Estado estado = estadoService.buscarOuFalhar(estadoId);
+
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
-		
-//		if (estado == null)	
-//			throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro de estado com código %d", cidade.getEstado().getId()));
-//		
-//		cidade.setEstado(estado);
-		
 	}
 	
 	public void remover(long id) {
-		if(!cidadeRepository.existsById(id))
-			throw new EntidadeNaoEncontradaException("Cidade de id %d não encontrado.".formatted(id));
-		
 		try {
 			cidadeRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException  | IllegalArgumentException e) {
-			throw new EntidadeNaoEncontradaException("Cidade de id %d não encontrado.".formatted(id));
+			throw new CidadeNaoEncontradaException(id);
+		} catch (DataIntegrityViolationException e){
+			throw new EntidadeEmUsoException((String.format(MSG_CIDADE_EM_USO, id)));
 		}
 	}
 }
