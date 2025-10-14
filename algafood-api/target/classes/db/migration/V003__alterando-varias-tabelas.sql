@@ -1,0 +1,10 @@
+alter table if exists cidade add constraint FKkworrwk40xj58kevvh3evi500 foreign key (estado_id) references estado;
+alter table if exists grupo_permissoes add constraint FKh3yk6f6dmr0hfil87j1qn0s4q foreign key (permisao_id) references permissao;
+alter table if exists grupo_permissoes add constraint FKd7wt9tnvrfttdcl5ofoelgi6j foreign key (grupo_id) references grupo;
+alter table if exists produto add constraint FKb9jhjyghjcn25guim7q4pt8qx foreign key (restaurante_id) references restaurante;
+alter table if exists restaurante add constraint FKrocrrb53b1w7tnlub9w8yxypp foreign key (cozinha_id) references cozinha;
+alter table if exists restaurante add constraint FKbc0tm7hnvc96d8e7e2ulb05yw foreign key (endereco_cidade_id) references cidade;
+alter table if exists restaurante_forma_pagamento add constraint FK7aln770m80358y4olr03hyhh2 foreign key (forma_pagamento_id) references forma_pagamento;
+alter table if exists restaurante_forma_pagamento add constraint FKa30vowfejemkw7whjvr8pryvj foreign key (restaurante_id) references restaurante;
+alter table if exists usuario_grupo add constraint FKk30suuy31cq5u36m9am4om9ju foreign key (grupo_id) references grupo;
+alter table if exists usuario_grupo add constraint FKdofo9es0esuiahyw2q467crxw foreign key (usuario_id) references usuario;
