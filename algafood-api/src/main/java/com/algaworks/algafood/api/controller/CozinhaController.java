@@ -59,15 +59,18 @@ public class CozinhaController {
 //	@ResponseStatus(value = HttpStatus.OK) RETORNA UMA MESANGEM DE STATUS HTTP, PODEMOS FAZER DE OUTRA FORMAS, MOSTRADA LOGO ABAIXO
 
 	@GetMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) {// @PathVariable DIZ ONDE ASSOCIAR O ID
-		Optional<Cozinha> cozinha = cozinhaRepository.findById(id); // ADAPTANDO TUDO PARA USO DE OPTIONAL!!
+	public Cozinha buscar(@PathVariable("cozinhaId") Long id) {// @PathVariable DIZ ONDE ASSOCIAR O ID
+		return cadastrarCozinhaService.buscarOuFalhar(id);
 
-		if (cozinha.isPresent())
-			return ResponseEntity.status(HttpStatus.OK).body(cozinha.get()); // DUAS FORMA SIMPLES DE MODIFCAR O STATUS HTTP. PRIMEIRA FORMA
+//		return cozinhaRepository.findById(id).orElseThrow(()-> new EntidadeNaoEncontradaException("TESTE"));
+
+//		Optional<Cozinha> cozinha = cozinhaRepository.findById(id); // ADAPTANDO TUDO PARA USO DE OPTIONAL!!
+//		if (cozinha.isPresent())
+//			return ResponseEntity.status(HttpStatus.OK).body(cozinha.get()); // DUAS FORMA SIMPLES DE MODIFCAR O STATUS HTTP. PRIMEIRA FORMA
 																		
 //		return ResponseEntity.ok(cozinha); SEGUNDA FORMA. LOGO CONHECEMOS TRES FORMAS DIFERENTE DE MODIFICA O STATUS HTTP
 
-		return ResponseEntity.notFound().build();
+//		return ResponseEntity.notFound().build();
 
 //		COMO FUNCIONA UM STATUS 302
 //		HttpHeaders headers = new HttpHeaders();
@@ -96,20 +99,9 @@ public class CozinhaController {
 	}
 
 	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<?> remover(@PathVariable("cozinhaId") Long id) {
-		
-		try {
-			cadastrarCozinhaService.remover(id);
-
-			return ResponseEntity.noContent().build();
-			
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-			
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
-		
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable("cozinhaId") Long id) {
+		cadastrarCozinhaService.remover(id);
 	}
 
 }

@@ -7,14 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -33,15 +26,8 @@ public class CidadeController {
 	}
 	
 	@GetMapping("/{cidadeId}")
-	public ResponseEntity<?> buscar(@PathVariable("cidadeId") Long id) {
-		
-		Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
-		
-		if(cidadeAtual.isPresent()) {
-			return ResponseEntity.status(HttpStatus.OK).body(cidadeAtual);
-		}
-
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();	
+	public Cidade buscar(@PathVariable("cidadeId") Long id) {
+		return  cidadeService.buscarOuFalhar(id).get();
 }
 	
 	
@@ -73,13 +59,8 @@ public class CidadeController {
 	}
 	
 	@DeleteMapping("/{cidadeId}")
-	public ResponseEntity<?> remover(@PathVariable("cidadeId") Long id) {
-		try {
-			cidadeService.remover(id);
-			
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable("cidadeId") Long id) {
+		cidadeService.remover(id);
 	}
 }
