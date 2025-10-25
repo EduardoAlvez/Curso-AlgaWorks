@@ -60,13 +60,13 @@ public class CidadeController {
 	}
 
 
-	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<?> tratarEntidadeNaoEncontraException(EntidadeNaoEncontradaException e){
-		Problema problema = Problema.builder()
-				.hora(LocalDateTime.now())
-				.mensagem(e.getMessage())
-				.build();
-
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
-	}
+//	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+//	public ResponseEntity<?> tratarEntidadeNaoEncontraException(EntidadeNaoEncontradaException e){
+//		Problema problema = Problema.builder()
+//				.hora(LocalDateTime.now())
+//				.mensagem(e.getMessage())
+//				.build();
+//
+//		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+//	}
 }
