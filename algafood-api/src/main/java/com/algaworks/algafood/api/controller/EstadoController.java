@@ -3,6 +3,8 @@ package com.algaworks.algafood.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,20 +34,20 @@ public class EstadoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Estado> adicionar(@RequestBody Estado estado){
-		Estado estadoAtual = estadoService.salvar(estado);
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(estadoAtual);
+	public Estado adicionar(@RequestBody Estado estado){
+		try {
+			return estadoService.salvar(estado);
+		}catch (EstadoNaoEncontradaException e){
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@PutMapping("/{estadoId}")
-	public ResponseEntity<Estado> atualizar(@PathVariable("estadoId") Long id, @RequestBody Estado estado){
+	public ResponseEntity<?> atualizar(@PathVariable("estadoId") Long id, @RequestBody Estado estado){
 		Estado estadoAtual = estadoService.buscarOuFalhar(id);
-		
 		BeanUtils.copyProperties(estado, estadoAtual, "id");
-		Estado estadoAatualizado = estadoService.salvar(estadoAtual);
-				
-		return ResponseEntity.ok(estadoAatualizado);
+
+		return ResponseEntity.status(HttpStatus.OK).body(estadoService.salvar(estadoAtual));
 		}
 	
 	@DeleteMapping("/{estadoId}")

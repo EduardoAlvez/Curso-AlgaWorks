@@ -55,7 +55,7 @@ public class RestauranteService {
 	}
 	
 	public Restaurante buscarOuFalhar(Long id) {
-		return restauranteRepository.findById(id).orElseThrow(()-> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)));
+		return restauranteRepository.findById(id).orElseThrow(()-> new RestauranteNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)));
 	}
 	
 	

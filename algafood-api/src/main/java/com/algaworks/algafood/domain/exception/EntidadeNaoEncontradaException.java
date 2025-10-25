@@ -4,8 +4,8 @@ package com.algaworks.algafood.domain.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.CONFLICT)
-public class EntidadeNaoEncontradaException extends RuntimeException {
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+public abstract class EntidadeNaoEncontradaException extends NegocioException {
 
 	/**
 	 * 

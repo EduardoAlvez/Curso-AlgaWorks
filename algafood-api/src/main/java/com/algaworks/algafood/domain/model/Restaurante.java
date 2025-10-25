@@ -42,8 +42,7 @@ public class Restaurante {
 	private BigDecimal taxaFrete;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties()
-//	@JoinColumn(name = "cozinha_codigo") PARA MODEIFICA UMA KEY DEVE APLICAR O JOIN
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 

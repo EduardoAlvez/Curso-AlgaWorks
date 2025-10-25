@@ -1,8 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.algaworks.algafood.api.exceptionHandler.Problema;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,27 +44,29 @@ public class CidadeController {
 	
 	@PutMapping("/{cidadeId}")
 	public ResponseEntity<?> atualizar(@PathVariable("cidadeId") Long id, @RequestBody Cidade cidade) {
-		
-		Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
-		
-		if (cidadeAtual.isPresent()) {
+		try {
+			Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
 			BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");
-//			Cidade cidadeAtualizada = cidadeService.salvar(cidadeAtual.get());
-			
-			try {
-				return ResponseEntity.status(HttpStatus.OK).body(cidadeService.salvar(cidadeAtual.get()));
-				
-			} catch (EntidadeNaoEncontradaException e) {
-				
-				return ResponseEntity.badRequest().body(e.getMessage());
-			}
+			return ResponseEntity.status(HttpStatus.OK).body(cidadeService.salvar(cidadeAtual.get()));
+		} catch (EstadoNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage());
 		}
-		return ResponseEntity.notFound().build();
 	}
 	
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable("cidadeId") Long id) {
 		cidadeService.remover(id);
+	}
+
+
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	public ResponseEntity<?> tratarEntidadeNaoEncontraException(EntidadeNaoEncontradaException e){
+		Problema problema = Problema.builder()
+				.hora(LocalDateTime.now())
+				.mensagem(e.getMessage())
+				.build();
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
 	}
 }
