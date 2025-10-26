@@ -4,7 +4,9 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -65,11 +67,25 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         if (rootCause instanceof InvalidFormatException){
             return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+        } else if (rootCause instanceof PropertyBindingException) {
+            return  handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
         }
 
         ProblemaTipo problemaTipo = ProblemaTipo.MENSAGEM_INCOMPREENSIVEL;
-        String detalhe = "Esceveu alguma cosia errada ai fi, da teus pulos!";
+        String detalhe = "Esceveu alguma cosia errada ai fi, da teus pulos, mexe nessa sintaxe ai!";
         Problema problema = createProblemaBuilder((HttpStatus) status, problemaTipo, detalhe).build();
+
+        return handleExceptionInternal(ex, problema, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String path =  ex.getPath().stream()
+                .map(JsonMappingException.Reference::getFieldName)
+                .collect(Collectors.joining("."));
+
+
+        String detalhe = String.format("A propiedade '%s', nao existe, corrija e tente novamente", path);
+        Problema problema = createProblemaBuilder((HttpStatus) status, ProblemaTipo.MENSAGEM_INCOMPREENSIVEL, detalhe).build();
 
         return handleExceptionInternal(ex, problema, headers, status, request);
     }
