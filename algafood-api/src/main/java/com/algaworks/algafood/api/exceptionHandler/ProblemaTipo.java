@@ -4,10 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum ProblemaTipo {
-    ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada","entidade nao encontrada."),
-    ENTIDADE_EM_USO("/entidade-em-uso","entidade esta em uso."),
+    ENTIDADE_EM_USO("/entidade-em-uso","Entidade esta em uso."),
     MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensivel","Mensagem esta com algo errado, verifique."),
-    NEGOCIO("/regra-de-negocio","regra de negocio violada.");
+    NEGOCIO("/regra-de-negocio","Regra de negocio violada."),
+    PARAMETRO_NAO_SUPORTADO("/tipo-nao-suportado","O tipo inserido nao e suportado, verifique a chamada do metodo."),
+    RECURSO_NAO_ENCONTRADA("/recurso-nao-encontrada","Recurso nao encontrada.");
+
 
 
     public String titulo;

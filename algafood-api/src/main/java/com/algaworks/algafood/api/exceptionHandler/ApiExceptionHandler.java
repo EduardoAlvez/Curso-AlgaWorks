@@ -4,35 +4,53 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        HttpStatus httpStatus = (HttpStatus) status;
+        ProblemaTipo problemaTipo = ProblemaTipo.RECURSO_NAO_ENCONTRADA;
+        String detalhe = String.format("O recurso '%s', que voce tentou acessar, e inexistente ou esta errado.",ex.getResourcePath());
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        return handleExceptionInternal(ex,problema, headers, httpStatus, request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_NAO_SUPORTADO;
+        String detalhe = String.format("O paramentro de URL '%s', recebeu o valor '%s', nao suportado pela api," +
+                "corrija seu bundao, e informe o valor compativel com o tipo '%s'",ex.getName() , ex.getValue(), ex.getRequiredType().getSimpleName());
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
+    }
+
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<?> tratarEntidadeNaoEncontraException(EntidadeNaoEncontradaException ex, WebRequest request){
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
-        ProblemaTipo problemaTipo = ProblemaTipo.ENTIDADE_NAO_ENCONTRADA;
+        ProblemaTipo problemaTipo = ProblemaTipo.RECURSO_NAO_ENCONTRADA;
         String detalhe = ex.getMessage();
 
         Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();

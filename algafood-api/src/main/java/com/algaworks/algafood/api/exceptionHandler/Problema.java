@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@JsonInclude
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Builder
 public class Problema {
