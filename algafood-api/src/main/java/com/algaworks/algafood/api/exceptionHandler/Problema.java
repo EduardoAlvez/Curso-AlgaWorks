@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.exceptionHandler;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class Problema {
     private String tipo;
     private String detalhe;
 
-//    private LocalDateTime hora;
-//    private String mensagem;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime timeStamp;
+    private String mensagemUsuario;
 }

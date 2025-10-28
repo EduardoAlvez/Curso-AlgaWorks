@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,20 +21,21 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    public static final String MSG_ERRO_PADRAO = "Ocorreu um erro interno inesperado do sistema. " +
+            "Tente novamente e se o erro problema persistir, entre em contato com o administrador do sistema";
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> Exception(Exception ex, WebRequest request){
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_NAO_SUPORTADO;
-        String detalhe = "Ocorreu um erro interno inesperado do sistema. " +
-                "Tente novamente e se o erro problema persistir, entre em contato com o administrador do sistema";
-
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, MSG_ERRO_PADRAO).build();
         return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
 
@@ -43,7 +45,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemaTipo problemaTipo = ProblemaTipo.RECURSO_NAO_ENCONTRADA;
         String detalhe = String.format("O recurso '%s', que voce tentou acessar, e inexistente ou esta errado.",ex.getResourcePath());
 
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
         return handleExceptionInternal(ex,problema, headers, httpStatus, request);
     }
 
@@ -54,7 +58,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detalhe = String.format("O paramentro de URL '%s', recebeu o valor '%s', nao suportado pela api," +
                 "corrija seu bundao, e informe o valor compativel com o tipo '%s'",ex.getName() , ex.getValue(), ex.getRequiredType().getSimpleName());
 
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
         return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
 
@@ -64,7 +70,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemaTipo problemaTipo = ProblemaTipo.RECURSO_NAO_ENCONTRADA;
         String detalhe = ex.getMessage();
 
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
 //        Problema problema = Problema.builder()
 //                .tipo("localhost:8080/entidade-nao-encontrada")
 //                .titulo("Entidade nao encontrada.")
@@ -80,7 +88,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemaTipo problemaTipo = ProblemaTipo.ENTIDADE_EM_USO;
         String detalhe = ex.getMessage();
 
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
 
         return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
@@ -102,7 +112,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemaTipo problemaTipo = ProblemaTipo.MENSAGEM_INCOMPREENSIVEL;
         String detalhe = "Esceveu alguma cosia errada ai fi, da teus pulos, mexe nessa sintaxe ai!";
-        Problema problema = createProblemaBuilder((HttpStatus) status, problemaTipo, detalhe).build();
+        Problema problema = createProblemaBuilder((HttpStatus) status, problemaTipo, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
 
         return handleExceptionInternal(ex, problema, headers, status, request);
     }
@@ -114,7 +126,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 
         String detalhe = String.format("A propiedade '%s', nao existe, corrija e tente novamente", path);
-        Problema problema = createProblemaBuilder((HttpStatus) status, ProblemaTipo.MENSAGEM_INCOMPREENSIVEL, detalhe).build();
+        Problema problema = createProblemaBuilder((HttpStatus) status, ProblemaTipo.MENSAGEM_INCOMPREENSIVEL, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
 
         return handleExceptionInternal(ex, problema, headers, status, request);
     }
@@ -128,7 +142,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String detalhe = String.format("A propiedade '%s', recebeu o valor '%s', que e do tipo invalido," +
                 " Corrija seu bundao, e informe o valor compativel com o tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
-        Problema problema = createProblemaBuilder((HttpStatus) statusCode, ProblemaTipo.MENSAGEM_INCOMPREENSIVEL, detalhe).build();
+        Problema problema = createProblemaBuilder((HttpStatus) statusCode, ProblemaTipo.MENSAGEM_INCOMPREENSIVEL, detalhe)
+                .mensagemUsuario(MSG_ERRO_PADRAO)
+                .build();
 
         return handleExceptionInternal(ex, problema, headers, statusCode, request);
     }
@@ -140,6 +156,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         if (body == null){
             body = Problema.builder()
 //                    .hora(LocalDateTime.now())
+                    .mensagemUsuario(MSG_ERRO_PADRAO)
                     .status(statusCode.value())
                     .detalhe(ex.getMessage())
                     .build();
@@ -147,6 +164,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }else if (body instanceof String){
             body = Problema.builder()
 //                    .hora(LocalDateTime.now())
+                    .mensagemUsuario(MSG_ERRO_PADRAO)
                     .status(statusCode.value())
                     .detalhe((String) body)
                     .build();
@@ -156,11 +174,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
+    // METODOS UTILITARIOS
     private  Problema.ProblemaBuilder createProblemaBuilder(HttpStatus status, ProblemaTipo problemaTipo, String detalhe){
 
         return Problema.builder()
                 .status(status.value())
                 .detalhe(detalhe)
+                .timeStamp(LocalDateTime.now())
                 .titulo(problemaTipo.getTitulo())
                 .tipo(problemaTipo.getUri());
     }
