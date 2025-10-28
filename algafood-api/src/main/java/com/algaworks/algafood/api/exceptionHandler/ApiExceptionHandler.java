@@ -26,6 +26,17 @@ import java.util.stream.Collectors;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> Exception(Exception ex, WebRequest request){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_NAO_SUPORTADO;
+        String detalhe = "Ocorreu um erro interno inesperado do sistema. " +
+                "Tente novamente e se o erro problema persistir, entre em contato com o administrador do sistema";
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe).build();
+        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleNoResourceFoundException(NoResourceFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         HttpStatus httpStatus = (HttpStatus) status;
