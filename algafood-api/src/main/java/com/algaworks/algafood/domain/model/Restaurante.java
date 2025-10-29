@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.algaworks.algafood.Grupos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -39,18 +40,17 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@NotNull
+	@NotBlank(groups = Grupos.RestaurantesCadastro.class)
 	@Column(nullable = false)
 	private String nome;
 
-	@NotNull
+	@NotNull(groups = Grupos.RestaurantesCadastro.class)
 	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull
+	@NotNull(groups = Grupos.RestaurantesCadastro.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "cozinha_id", nullable = false)

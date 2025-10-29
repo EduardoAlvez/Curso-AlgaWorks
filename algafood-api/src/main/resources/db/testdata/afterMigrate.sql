@@ -1,7 +1,7 @@
-INSERT INTO cozinha (id,nome) values (1,'Tailandesa');
-INSERT INTO cozinha (id,nome) values (2,'Indiana');
-INSERT INTO cozinha (id,nome) values (3,'Italiana');
-INSERT INTO cozinha (id,nome) values (4,'Brasileira');
+INSERT INTO cozinha (nome) values ('Tailandesa');
+INSERT INTO cozinha (nome) values ('Indiana');
+INSERT INTO cozinha (nome) values ('Italiana');
+INSERT INTO cozinha (nome) values ('Brasileira');
 INSERT INTO estado (nome) values ('Pernambuco');
 INSERT INTO estado (nome) values ('Paraiba');
 INSERT INTO estado (nome) values ('Sergipe');
