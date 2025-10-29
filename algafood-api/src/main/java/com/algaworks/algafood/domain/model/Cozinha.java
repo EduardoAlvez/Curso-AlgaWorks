@@ -15,6 +15,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,7 +27,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "cozinha")
 public class Cozinha {
 
-	@NotNull(groups = Grupos.RestaurantesCadastro.class)
+	@NotNull(groups = Grupos.CozinhaId.class)
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

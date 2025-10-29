@@ -9,7 +9,8 @@ import com.algaworks.algafood.Grupos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.NonNull;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -40,17 +41,18 @@ public class Restaurante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(groups = Grupos.RestaurantesCadastro.class)
+	@NotBlank
 	@Column(nullable = false)
 	private String nome;
 
-	@NotNull(groups = Grupos.RestaurantesCadastro.class)
+	@NotNull
 	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
 
 	@Valid
-	@NotNull(groups = Grupos.RestaurantesCadastro.class)
+	@ConvertGroup(from = Default.class, to = Grupos.CozinhaId.class)
+	@NotNull(groups = Grupos.CozinhaId.class)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "cozinha_id", nullable = false)

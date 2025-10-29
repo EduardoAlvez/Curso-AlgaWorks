@@ -3,7 +3,6 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.algaworks.algafood.Grupos;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
@@ -13,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +49,7 @@ public class RestauranteController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> adicionar(@Validated(Grupos.RestaurantesCadastro.class) @RequestBody Restaurante restaurante) {
+	public ResponseEntity<?> adicionar(@Valid @RequestBody Restaurante restaurante) {
 		try {
 			restaurante = restauranteService.salvar(restaurante);
 			
