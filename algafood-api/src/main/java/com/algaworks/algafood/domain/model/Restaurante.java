@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,7 +48,9 @@ public class Restaurante {
 	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
-	
+
+	@Valid
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JoinColumn(name = "cozinha_id", nullable = false)
