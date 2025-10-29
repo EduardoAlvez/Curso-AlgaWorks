@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -31,11 +35,51 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public static final String MSG_ERRO_PADRAO = "Ocorreu um erro interno inesperado do sistema. " +
             "Tente novamente e se o erro problema persistir, entre em contato com o administrador do sistema";
 
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> Exception(Exception ex, WebRequest request){
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_NAO_SUPORTADO;
+        ProblemaTipo problemaTipo = ProblemaTipo.ERRO_DO_SISTEMA;
         Problema problema = createProblemaBuilder(httpStatus, problemaTipo, MSG_ERRO_PADRAO).build();
+        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
+    }
+
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<Object> handleTransactionSystemException(TransactionSystemException ex, WebRequest request){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ProblemaTipo problemaTipo = ProblemaTipo.DADOS_INVALIDOS;
+        String detalhe = "Um ou mais campos estao invalidos. Faca o preenchimento corret oe tente novamente.";
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(detalhe)
+                .build();
+        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ProblemaTipo problemaTipo = ProblemaTipo.DADOS_INVALIDOS;
+        String detalhe = "Um ou mais campos estao invalidos. Faca o preenchimento correto e tente novamente.";
+
+        // ARMAZENA OS CAMPOS VIOLADOS
+        BindingResult bindingResult = ex.getBindingResult();
+
+        List<Problema.Campo> campos = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> Problema.Campo.builder()
+                        .name(fieldError.getField())
+                        .mensagemUsuario(fieldError.getDefaultMessage())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(detalhe)
+                .campos(campos)
+                .build();
+
+
         return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
 
@@ -49,19 +93,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .mensagemUsuario(MSG_ERRO_PADRAO)
                 .build();
         return handleExceptionInternal(ex,problema, headers, httpStatus, request);
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<?> handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request){
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_NAO_SUPORTADO;
-        String detalhe = String.format("O paramentro de URL '%s', recebeu o valor '%s', nao suportado pela api," +
-                "corrija seu bundao, e informe o valor compativel com o tipo '%s'",ex.getName() , ex.getValue(), ex.getRequiredType().getSimpleName());
-
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
-                .mensagemUsuario(MSG_ERRO_PADRAO)
-                .build();
-        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)

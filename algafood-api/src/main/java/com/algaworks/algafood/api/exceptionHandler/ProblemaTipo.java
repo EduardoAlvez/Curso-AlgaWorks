@@ -9,7 +9,8 @@ public enum ProblemaTipo {
     NEGOCIO("/regra-de-negocio","Regra de negocio violada."),
     PARAMETRO_NAO_SUPORTADO("/tipo-nao-suportado","O tipo inserido nao e suportado, verifique a chamada do metodo."),
     RECURSO_NAO_ENCONTRADA("/recurso-nao-encontrada","Recurso nao encontrada."),
-    ERRO_DO_SISTEMA("/erro-do-sistema","Aconteceu algo inesperado.");
+    ERRO_DO_SISTEMA("/erro-do-sistema","Aconteceu algo inesperado."),
+    DADOS_INVALIDOS("/dados-invalidos","Dados invalidos");
 
 
 

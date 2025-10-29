@@ -9,6 +9,7 @@ import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -60,7 +61,7 @@ public class RestauranteController {
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @RequestBody Restaurante restaurante){
+	public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @Valid @RequestBody Restaurante restaurante){
 
         Restaurante restauranteAtual = null;
         try {
@@ -75,7 +76,7 @@ public class RestauranteController {
 	}
 	
 	@PatchMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> dados, HttpServletRequest request){
+	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @Valid @RequestBody Map<String, Object> dados, HttpServletRequest request){
 		//BUSCA O RESTAURANTE ORIGIAL
 		Restaurante restauranteDestino = restauranteService.buscarOuFalhar(id);
 		
