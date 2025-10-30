@@ -33,7 +33,7 @@ public class Cozinha {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "Nome é obrigatorio.")
 	@Column(name = "nome", nullable = false)
 	private String nome;
 

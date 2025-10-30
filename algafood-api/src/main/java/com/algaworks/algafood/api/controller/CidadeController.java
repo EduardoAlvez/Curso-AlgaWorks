@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.algaworks.algafood.api.exceptionHandler.Problema;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,14 +37,14 @@ public class CidadeController {
 	
 	
 	@PostMapping
-	public ResponseEntity<Cidade> adicionar(@RequestBody Cidade cidade) {
+	public ResponseEntity<Cidade> adicionar(@Valid @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cidadeService.salvar(cidade);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(cidadeAtual);
 	}
 	
 	@PutMapping("/{cidadeId}")
-	public ResponseEntity<?> atualizar(@PathVariable("cidadeId") Long id, @RequestBody Cidade cidade) {
+	public ResponseEntity<?> atualizar(@PathVariable("cidadeId") Long id, @Valid @RequestBody Cidade cidade) {
 		try {
 			Optional<Cidade> cidadeAtual = cidadeService.buscarOuFalhar(id);
 			BeanUtils.copyProperties(cidade, cidadeAtual.get(), "id");

@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -34,6 +38,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String MSG_ERRO_PADRAO = "Ocorreu um erro interno inesperado do sistema. " +
             "Tente novamente e se o erro problema persistir, entre em contato com o administrador do sistema";
+
+    @Autowired
+    public MessageSource messageSource;
 
 
     @ExceptionHandler(Exception.class)
@@ -67,11 +74,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         BindingResult bindingResult = ex.getBindingResult();
 
         List<Problema.Campo> campos = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> Problema.Campo.builder()
-                        .name(fieldError.getField())
-                        .mensagemUsuario(fieldError.getDefaultMessage())
-                        .build()
-                )
+                .map(fieldError -> {
+                    String mensagem = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Problema.Campo.builder()
+                                    .name(fieldError.getField())
+                                    .mensagemUsuario(mensagem)
+                                    .build();
+                        })
                 .collect(Collectors.toList());
 
         Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
