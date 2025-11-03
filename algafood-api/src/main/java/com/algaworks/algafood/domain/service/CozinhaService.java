@@ -36,6 +36,9 @@ public class CozinhaService {
 		return cozinhaRepository.findById(id).orElseThrow(()-> new CozinhaNaoEncontradaException(id));
 	}
 	public void remover(Long id) {
+		if (!cozinhaRepository.existsById(id))
+			throw new CozinhaNaoEncontradaException(id);
+
 		try {
 			cozinhaRepository.deleteById(id);	
 		} catch (DataIntegrityViolationException e) {

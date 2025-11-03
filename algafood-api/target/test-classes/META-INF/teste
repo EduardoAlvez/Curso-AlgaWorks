@@ -1,0 +1,16 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>
+
+<entity-mappings
+	xmlns="https://xmlns.jcp.org/xml/ns/persistence/orm"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence"
+	version="2.2">
+	
+	<named-query name="Cozinha.consultaPorNome">
+		<querry>
+			"from Cozinha 
+				where nome like concat('%', :nome%, '%')
+		</querry>
+	</named-query>
+	
+</entity-mappings>-->
