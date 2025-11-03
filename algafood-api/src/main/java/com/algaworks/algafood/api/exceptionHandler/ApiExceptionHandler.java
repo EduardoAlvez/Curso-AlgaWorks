@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.exceptionHandler;
 
+import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -7,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -19,12 +19,11 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -66,31 +65,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ProblemaTipo problemaTipo = ProblemaTipo.DADOS_INVALIDOS;
-        String detalhe = "Um ou mais campos estao invalidos. Faca o preenchimento correto e tente novamente.";
-
         // ARMAZENA OS CAMPOS VIOLADOS
         BindingResult bindingResult = ex.getBindingResult();
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        List<Problema.Campo> campos = bindingResult.getFieldErrors().stream()
-                .map(fieldError -> {
-                    String mensagem = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-
-                    return Problema.Campo.builder()
-                                    .name(fieldError.getField())
-                                    .mensagemUsuario(mensagem)
-                                    .build();
-                        })
-                .collect(Collectors.toList());
-
-        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
-                .mensagemUsuario(detalhe)
-                .campos(campos)
-                .build();
-
-
-        return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
+        return handlerValidacaoInterno(ex, request, bindingResult, httpStatus);
     }
 
     @Override
@@ -135,6 +114,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex,problema, new HttpHeaders(), httpStatus, request);
     }
+
+
 
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<?> tratarNegocioException(NegocioException ex, WebRequest request){
@@ -214,8 +195,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
 
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request){
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        // ARMAZENA OS CAMPOS VIOLADOS
+        BindingResult bindingResult = ex.getBindingResult();
+
+        return handlerValidacaoInterno(ex, request, bindingResult, httpStatus);
+    }
+
 
     // METODOS UTILITARIOS
+
     private  Problema.ProblemaBuilder createProblemaBuilder(HttpStatus status, ProblemaTipo problemaTipo, String detalhe){
 
         return Problema.builder()
@@ -224,5 +215,35 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .timeStamp(LocalDateTime.now())
                 .titulo(problemaTipo.getTitulo())
                 .tipo(problemaTipo.getUri());
+    }
+
+    private ResponseEntity<Object> handlerValidacaoInterno(Exception ex, WebRequest request,
+                                                           BindingResult bindingResult, HttpStatus httpStatus) {
+        ProblemaTipo problemaTipo = ProblemaTipo.DADOS_INVALIDOS;
+        String detalhe = "Um ou mais campos estao invalidos. Faca o preenchimento correto e tente novamente.";
+
+
+        List<Problema.objeto> objetos = bindingResult.getAllErrors().stream()
+                .map(objectError -> {
+                    String mensagem = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+
+                    String nome = objectError.getObjectName();
+                    if (objectError instanceof FieldError){
+                        nome = ((FieldError)objectError).getField();
+                    }
+                    return Problema.objeto.builder()
+                            .name(nome)
+                            .mensagemUsuario(mensagem)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        Problema problema = createProblemaBuilder(httpStatus, problemaTipo, detalhe)
+                .mensagemUsuario(detalhe)
+                .objetos(objetos)
+                .build();
+
+
+        return handleExceptionInternal(ex, problema, new HttpHeaders(), httpStatus, request);
     }
 }

@@ -3,9 +3,7 @@ package com.algaworks.algafood.api.exceptionHandler;
 import com.fasterxml.jackson.annotation.*;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,11 +20,11 @@ public class Problema {
     private String tipo;
     private String detalhe;
     private String mensagemUsuario;
-    private List<Campo> campos;
+    private List<objeto> objetos;
 
     @Getter
     @Builder
-    public static class Campo {
+    public static class objeto {
         private String name;
         private String mensagemUsuario;
     }

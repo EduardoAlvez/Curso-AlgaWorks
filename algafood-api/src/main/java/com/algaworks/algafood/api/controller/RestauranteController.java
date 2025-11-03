@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
@@ -30,6 +33,9 @@ public class RestauranteController {
 //	private RestauranteRepository restauranteRepository;
 	@Autowired
 	private RestauranteService restauranteService;
+
+    @Autowired
+    private SmartValidator smartValidator;
 	
 	//MÉTODOS
 	
@@ -72,15 +78,27 @@ public class RestauranteController {
 	}
 	
 	@PatchMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @Valid @RequestBody Map<String, Object> dados, HttpServletRequest request){
+	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> dados, HttpServletRequest request){
 		//BUSCA O RESTAURANTE ORIGIAL
 		Restaurante restauranteDestino = restauranteService.buscarOuFalhar(id);
 		
 		mesclar(dados, restauranteDestino, request);
+        validar(restauranteDestino, "Restaurante");
+
 		return atualizar(id, restauranteDestino);
 	}
 
-	private void mesclar(Map<String, Object> dados, Restaurante restauranteDestino, HttpServletRequest request) {
+    private void validar(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante,
+                objectName);
+        smartValidator.validate(restaurante, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidacaoException(bindingResult);
+        }
+    }
+
+    private void mesclar(Map<String, Object> dados, Restaurante restauranteDestino, HttpServletRequest request) {
 		ServletServerHttpRequest servletServerHttpRequest = new ServletServerHttpRequest(request);
 
 		//MAPEA AS VARIAVES E CONVERTE OS DADOS PARA SE IGUAL A DA CLASSE "RESTAURANTE"
