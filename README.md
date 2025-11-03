@@ -85,13 +85,13 @@ Curso completo da AlgaWorks, SpringBoot Especialista SprintREST
 - Conhecendo o nível 2 do RMM **[COMPLETO]**
 - Conhecendo o nível 3 do RMM **[COMPLETO]**
 
-## Super poderes do Spring Data JPA **[INICIANDO]**
+## Super poderes do Spring Data JPA **[COMPLETO]**
 
-## Explorando mais do JPA e Hibernate
-## Pool de conexões e Flyway
-## Tratamento e modelagem de erros da API
-## Validações com Bean Validation
-## Testes de Integração
+## Explorando mais do JPA e Hibernate **[COMPLETO]**
+## Pool de conexões e Flyway **[COMPLETO]**
+## Tratamento e modelagem de erros da API **[COMPLETO]**
+## Validações com Bean Validation **[COMPLETO]**
+## Testes de Integração **[INICIADO]**
 ## Boas práticas e técnicas para APIs
 ## Modelagem avançada e implementação da API
 ## Modelagem de aplicações, pesquisas e relatórios
