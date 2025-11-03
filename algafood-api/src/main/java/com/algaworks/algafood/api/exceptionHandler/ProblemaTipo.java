@@ -15,8 +15,8 @@ public enum ProblemaTipo {
 
 
 
-    public String titulo;
-    public String uri;
+    public final String titulo;
+    public final String uri;
 
     ProblemaTipo(String path, String titulo){
         this.titulo = titulo;

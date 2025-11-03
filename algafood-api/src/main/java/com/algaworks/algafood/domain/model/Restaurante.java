@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.algaworks.algafood.core.validation.Grupos;
+import com.algaworks.algafood.core.validation.Multiplo;
+import com.algaworks.algafood.core.validation.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -46,8 +48,10 @@ public class Restaurante {
 	private String nome;
 
 	@NotNull
-	@PositiveOrZero
+//	@PositiveOrZero
 	@Column(name = "taxa_frete", nullable = false)
+//    @TaxaFrete
+    @Multiplo(numero = 5)
 	private BigDecimal taxaFrete;
 
 	@Valid
