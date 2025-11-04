@@ -9,6 +9,7 @@ import com.algaworks.algafood.core.validation.Grupos;
 import com.algaworks.algafood.core.validation.Multiplo;
 import com.algaworks.algafood.core.validation.TaxaFrete;
 import com.algaworks.algafood.core.validation.ValorZeroIncluiDescricao;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -60,7 +61,7 @@ public class Restaurante {
 	@ConvertGroup(from = Default.class, to = Grupos.CozinhaId.class)
 	@NotNull(groups = Grupos.CozinhaId.class)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "nome"})
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 
@@ -68,18 +69,21 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataCadastro;
 
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@UpdateTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
-	
 
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento", 
 		joinColumns = @JoinColumn(name = "restaurante_id"), 

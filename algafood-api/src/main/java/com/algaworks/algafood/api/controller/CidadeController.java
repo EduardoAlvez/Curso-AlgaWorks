@@ -50,7 +50,6 @@ public class CidadeController {
 		}
 	}
 
-	@Tran
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable("cidadeId") Long id) {
