@@ -60,30 +60,24 @@ public class Restaurante {
 	@Valid
 	@ConvertGroup(from = Default.class, to = Grupos.CozinhaId.class)
 	@NotNull(groups = Grupos.CozinhaId.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "nome"})
+	@ManyToOne
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataCadastro;
 
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@UpdateTimestamp
 	@Column(nullable = false)
 	private LocalDateTime dataAtualizacao;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<Produto>();
 
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento", 
 		joinColumns = @JoinColumn(name = "restaurante_id"), 
