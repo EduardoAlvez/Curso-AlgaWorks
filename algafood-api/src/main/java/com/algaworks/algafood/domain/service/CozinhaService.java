@@ -14,6 +14,7 @@ import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CozinhaService {
@@ -22,19 +23,24 @@ public class CozinhaService {
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
-	
+
+
+	@Transactional
 	public List<Cozinha> todas() {
 		return cozinhaRepository.findAll();
 	}
-	
-	
+
+	@Transactional
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.save(cozinha);
 	}
 
+	@Transactional
 	public Cozinha buscarOuFalhar(Long id){
 		return cozinhaRepository.findById(id).orElseThrow(()-> new CozinhaNaoEncontradaException(id));
 	}
+
+	@Transactional
 	public void remover(Long id) {
 		if (!cozinhaRepository.existsById(id))
 			throw new CozinhaNaoEncontradaException(id);

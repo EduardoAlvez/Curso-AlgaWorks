@@ -14,6 +14,7 @@ import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RestauranteService {
@@ -27,11 +28,13 @@ public class RestauranteService {
 
 	@Autowired
 	private CozinhaService cozinhaService;
-	
+
+	@Transactional
 	public List<Restaurante> buscarTodos() {
 		return restauranteRepository.findAll();
 	}
-	
+
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		
 		Long idCozinha = restaurante.getCozinha().getId();
@@ -40,7 +43,8 @@ public class RestauranteService {
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
 	}
-	
+
+	@Transactional
 	public void remover(Long id) {
 		try {
 			restauranteRepository.deleteById(id);
@@ -53,7 +57,8 @@ public class RestauranteService {
 			throw new RestauranteNaoEncontradaException(id);
 		}
 	}
-	
+
+	@Transactional
 	public Restaurante buscarOuFalhar(Long id) {
 		return restauranteRepository.findById(id).orElseThrow(()-> new RestauranteNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)));
 	}

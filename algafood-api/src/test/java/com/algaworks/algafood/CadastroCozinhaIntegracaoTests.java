@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CozinhaService;
 import com.algaworks.algafood.domain.service.RestauranteService;
 import io.restassured.RestAssured;
@@ -22,14 +23,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("/application-test.properties")
+//@TestPropertySource("/application-test.properties")
 public class CadastroCozinhaIntegracaoTests {
+
+    private int quanidadeCozinhaCadastrada;
+    private Long cozinhaInexistente = 9999L;
 
     @LocalServerPort
     private int port;
 
     @Autowired
     private CozinhaService cozinhaService;
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
 
     @Autowired
     private RestauranteService restauranteService;
@@ -43,6 +50,7 @@ public class CadastroCozinhaIntegracaoTests {
         basePath = "/cozinhas";
 
         flyway.migrate();
+        quanidadeCozinhaCadastrada = (int) cozinhaRepository.count();
     }
 
 
@@ -96,7 +104,7 @@ public class CadastroCozinhaIntegracaoTests {
         //CENÁRIO
         //AÇÃO
         //VERIFICAÇÃO
-        assertThrows(CozinhaNaoEncontradaException.class, ()-> cozinhaService.remover(9999L));
+        assertThrows(CozinhaNaoEncontradaException.class, ()-> cozinhaService.remover(cozinhaInexistente));
     }
 
     @Test
@@ -111,14 +119,14 @@ public class CadastroCozinhaIntegracaoTests {
     }
 
     @Test
-    public void deveConter4Cozinhas_QuandoConsultarCozinhas(){
+    public void deveTerCozinhas_QuandoConsultarCozinhas(){
         enableLoggingOfRequestAndResponseIfValidationFails();
         given()
                 .accept(ContentType.JSON)
                 .when()
                 .get()
                 .then()
-                .body("", Matchers.hasSize(5));
+                .body("", Matchers.hasSize(quanidadeCozinhaCadastrada));
     }
 
     @Test

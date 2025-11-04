@@ -15,6 +15,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CidadeService {
@@ -27,16 +28,19 @@ public class CidadeService {
 	private EstadoRepository estadoRepository;
 	@Autowired
 	private EstadoService estadoService;
-	
+
+	@Transactional
 	public List<Cidade> todos() {
 		return cidadeRepository.findAll();
 	}
-	
+
+	@Transactional
 	public Optional<Cidade> buscarOuFalhar(Long id) {
 		return Optional.ofNullable(cidadeRepository.findById(id).orElseThrow(() -> new CidadeNaoEncontradaException(id)));
 	}
 	
 	// SALVAR E ATUALIZAR
+	@Transactional
 	public Cidade salvar(Cidade cidade) {
 		// USADO PRA ADICIONAR E PARA ATUALIZAR, POIS USA O MERGE.
 		Long estadoId = cidade.getEstado().getId();
@@ -46,7 +50,8 @@ public class CidadeService {
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
 	}
-	
+
+	@Transactional
 	public void remover(long id) {
 		try {
 			cidadeRepository.deleteById(id);

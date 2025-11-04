@@ -49,7 +49,8 @@ public class CidadeController {
 			throw new NegocioException(e.getMessage());
 		}
 	}
-	
+
+	@Tran
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable("cidadeId") Long id) {
