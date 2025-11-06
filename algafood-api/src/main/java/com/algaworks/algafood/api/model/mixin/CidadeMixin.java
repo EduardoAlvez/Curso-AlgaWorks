@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 
-public class CidadeMixin {
+public abstract class CidadeMixin {
 
 
 	@JsonIgnoreProperties(value = "nome")

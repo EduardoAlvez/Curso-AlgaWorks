@@ -27,8 +27,7 @@ public class Endereco {
     @Column(name = "endereco_complemento")
     private String complemento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "endereco_cidade_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Cidade cidade;
 }

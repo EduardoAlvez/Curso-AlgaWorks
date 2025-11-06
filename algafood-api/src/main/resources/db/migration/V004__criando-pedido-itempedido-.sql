@@ -38,3 +38,5 @@ alter table if exists pedido add constraint FKk987vfg9cpgx7qxj3166fdqig foreign 
 alter table if exists pedido add constraint FKqaa411xsl0xu4tkvt1wpccd3b foreign key (forma_pagamento_id) references forma_pagamento;
 alter table if exists pedido add constraint FK3eud5cqmgsnltyk704hu3qj71 foreign key (restaurante_id) references restaurante;
 alter table if exists pedido add constraint FK6uxomgomm93vg965o8brugt00 foreign key (usuario_id) references usuario;
+
+SET TIME ZONE 'UTC';
