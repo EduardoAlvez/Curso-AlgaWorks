@@ -2,7 +2,10 @@ package com.algaworks.algafood.domain.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.algaworks.algafood.api.model.dtos.CozinhaModel;
+import com.algaworks.algafood.api.model.dtos.RestauranteModel;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +39,9 @@ public class RestauranteService {
 
 	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
-		
 		Long idCozinha = restaurante.getCozinha().getId();
 		Cozinha cozinha = cozinhaService.buscarOuFalhar(idCozinha);
-		
+
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
 	}
@@ -48,7 +50,7 @@ public class RestauranteService {
 	public void remover(Long id) {
 		try {
 			restauranteRepository.deleteById(id);
-			
+
 		} catch (IllegalArgumentException e) {
 			throw new CozinhaNaoEncontradaException(
                     "Não existe uma cozinha com o ID: %d.".formatted(id));
@@ -62,12 +64,30 @@ public class RestauranteService {
 	public Restaurante buscarOuFalhar(Long id) {
 		return restauranteRepository.findById(id).orElseThrow(()-> new RestauranteNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, id)));
 	}
-	
-	
+
+
+
 	/*
 	 * NAO SE USA MAIS.
 	 * catch (EmptyResultDataAccessException e) { throw new
 	 * EntidadeNaoEncontradaException(
 	 * "Não existe uma Restaurante com o ID: %d".formatted(id)); }
 	 */
+	private RestauranteModel toModel(Restaurante restaurante) {
+		RestauranteModel restauranteModel = new RestauranteModel();
+		CozinhaModel cozinhaModel = new CozinhaModel();
+
+		cozinhaModel.setId(restaurante.getCozinha().getId());
+		cozinhaModel.setNome(restaurante.getCozinha().getNome());
+
+		restauranteModel.setNome(restaurante.getNome());
+		restauranteModel.setId(restaurante.getId());
+		restauranteModel.setCozinha(cozinhaModel);
+
+		return restauranteModel;
+	}
+
+	private List<RestauranteModel> toCollertionModel(List<Restaurante> restaurantes){
+		return restaurantes.stream().map(this::toModel).collect(Collectors.toList());
+	}
 }

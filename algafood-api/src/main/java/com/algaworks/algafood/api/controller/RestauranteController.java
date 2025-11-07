@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.model.dtos.RestauranteModel;
 import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -48,13 +49,13 @@ public class RestauranteController {
 	public ResponseEntity<?> buscar(@PathVariable("restauranteId") Long id){
 		Restaurante restaurante = restauranteService.buscarOuFalhar(id);
 		
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.status(HttpStatus.OK).body(restaurante);
 	}
 	
 	@PostMapping
 	public ResponseEntity<?> adicionar(@Valid @RequestBody Restaurante restaurante) {
 		try {
-			restaurante = restauranteService.salvar(restaurante);
+			restauranteService.salvar(restaurante);
 			
 			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
 		} catch (CozinhaNaoEncontradaException e) {
