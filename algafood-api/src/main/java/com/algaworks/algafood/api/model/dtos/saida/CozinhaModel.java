@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.model.dtos;
+package com.algaworks.algafood.api.model.dtos.saida;
 
 import lombok.Data;
 

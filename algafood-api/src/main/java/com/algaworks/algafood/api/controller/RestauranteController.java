@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.model.dtos.RestauranteModel;
+import com.algaworks.algafood.api.model.dtos.entrada.RestauranteInputModel;
+import com.algaworks.algafood.api.model.dtos.saida.CozinhaModel;
+import com.algaworks.algafood.api.model.dtos.saida.RestauranteModel;
 import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -41,30 +44,28 @@ public class RestauranteController {
 	//MÉTODOS
 	
 	@GetMapping
-	public List<Restaurante> listar(){
-		return restauranteService.buscarTodos();
+	public List<RestauranteModel> listar(){
+		return toCollertionModel(restauranteService.buscarTodos());
 	}
 	
 	@GetMapping("/{restauranteId}")
-	public ResponseEntity<?> buscar(@PathVariable("restauranteId") Long id){
+	public ResponseEntity<RestauranteModel> buscar(@PathVariable("restauranteId") Long id){
 		Restaurante restaurante = restauranteService.buscarOuFalhar(id);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(restaurante);
+
+		return ResponseEntity.status(HttpStatus.OK).body(toModel(restaurante));
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> adicionar(@Valid @RequestBody Restaurante restaurante) {
+	public ResponseEntity<RestauranteModel> adicionar(@Valid @RequestBody RestauranteInputModel restaurante) {
 		try {
-			restauranteService.salvar(restaurante);
-			
-			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
+			return ResponseEntity.status(HttpStatus.CREATED).body(toModel(restauranteService.salvar(inputToModel(restaurante))));
 		} catch (CozinhaNaoEncontradaException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
 	
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long id, @Valid @RequestBody Restaurante restaurante){
+	public ResponseEntity<RestauranteModel> atualizar(@PathVariable("restauranteId") Long id, @Valid @RequestBody Restaurante restaurante){
 
         Restaurante restauranteAtual = null;
         try {
@@ -75,11 +76,11 @@ public class RestauranteController {
             throw new NegocioException(e.getMessage());
         }
 
-        return ResponseEntity.ok(restauranteService.salvar(restauranteAtual));
+        return ResponseEntity.ok(toModel(restauranteService.salvar(restauranteAtual)));
 	}
 	
 	@PatchMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizarParcial (@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> dados, HttpServletRequest request){
+	public ResponseEntity<RestauranteModel> atualizarParcial (@PathVariable("restauranteId") Long id, @RequestBody Map<String, Object> dados, HttpServletRequest request){
 		//BUSCA O RESTAURANTE ORIGIAL
 		Restaurante restauranteDestino = restauranteService.buscarOuFalhar(id);
 		
@@ -89,17 +90,49 @@ public class RestauranteController {
 		return atualizar(id, restauranteDestino);
 	}
 
-    private void validar(Restaurante restaurante, String objectName) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante,
-                objectName);
-        smartValidator.validate(restaurante, bindingResult);
+	@DeleteMapping("/{restauranteId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable("restauranteId") Long id){
+		restauranteService.remover(id);
 
-        if (bindingResult.hasErrors()) {
-            throw new ValidacaoException(bindingResult);
-        }
-    }
+	}
 
-    private void mesclar(Map<String, Object> dados, Restaurante restauranteDestino, HttpServletRequest request) {
+	//------ MÉTODOS PRIVADOS
+	private void validar(Restaurante restaurante, String objectName) {
+		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante,
+				objectName);
+		smartValidator.validate(restaurante, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			throw new ValidacaoException(bindingResult);
+		}
+	}
+
+	private Restaurante inputToModel(RestauranteInputModel restauranteInputModel){
+		Restaurante restaurante = new Restaurante();
+
+		return restaurante;
+	}
+
+	private RestauranteModel toModel(Restaurante restaurante) {
+		RestauranteModel restauranteModel = new RestauranteModel();
+		CozinhaModel cozinhaModel = new CozinhaModel();
+
+		cozinhaModel.setId(restaurante.getCozinha().getId());
+		cozinhaModel.setNome(restaurante.getCozinha().getNome());
+
+		restauranteModel.setNome(restaurante.getNome());
+		restauranteModel.setId(restaurante.getId());
+		restauranteModel.setCozinha(cozinhaModel);
+
+		return restauranteModel;
+	}
+
+	private List<RestauranteModel> toCollertionModel(List<Restaurante> restaurantes){
+		return restaurantes.stream().map(this::toModel).collect(Collectors.toList());
+	}
+
+	private void mesclar(Map<String, Object> dados, Restaurante restauranteDestino, HttpServletRequest request) {
 		ServletServerHttpRequest servletServerHttpRequest = new ServletServerHttpRequest(request);
 
 		//MAPEA AS VARIAVES E CONVERTE OS DADOS PARA SE IGUAL A DA CLASSE "RESTAURANTE"
@@ -128,14 +161,6 @@ public class RestauranteController {
 		} catch (IllegalArgumentException e) {
 			Throwable rootCause = ExceptionUtils.getRootCause(e);
 			throw new HttpMessageNotReadableException(e.getMessage(), rootCause, servletServerHttpRequest);
-        }
-    }
-	
-	
-	@DeleteMapping("/{restauranteId}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@PathVariable("restauranteId") Long id){
-		restauranteService.remover(id);
-
+		}
 	}
 }

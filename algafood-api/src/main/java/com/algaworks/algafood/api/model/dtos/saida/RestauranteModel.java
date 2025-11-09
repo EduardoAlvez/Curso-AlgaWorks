@@ -1,6 +1,5 @@
-package com.algaworks.algafood.api.model.dtos;
+package com.algaworks.algafood.api.model.dtos.saida;
 
-import com.algaworks.algafood.domain.model.Cozinha;
 import lombok.Data;
 
 @Data
